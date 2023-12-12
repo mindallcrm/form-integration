@@ -21,19 +21,6 @@ let config = {
     },
 }
 
-// TODO delete
-config.url = 'http://127.0.0.1:8000/api/lead/create/byExternalForm'
-config.inputs.firstname = 'wpforms[fields][0][first]'
-config.inputs.lastname = 'wpforms[fields][0][last]'
-config.inputs.phone = 'wpforms[fields][3]'
-config.inputs.email = 'wpforms[fields][1]'
-config.inputs.notes = 'wpforms[fields][2]'
-
-config.hiddenInputs.orgId = '55c99ec5-6b8b-4f85-8837-a8101ce240ad'
-config.hiddenInputs.sourceId = 'Sabiha or whatever'
-config.hiddenInputs.source = ''
-//
-
 ///
 
 function formatData(formData) {
@@ -47,65 +34,42 @@ function formatData(formData) {
         data[inputKey] = config.hiddenInputs[inputKey]
     }
 
-    return JSON.stringify(data)
+    return data
 }
 
-async function apiCall(formData) {
+async function apiCall(data) {
     return fetch(config.url, {
         method: 'POST',
         headers: {
-            "Accept": "application/json",
-            "Content-Type": "application/json",
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
         },
-        body: formatData(formData)
+        body: JSON.stringify(data)
     })
 }
 
 window.saveLead = async (event) => {
     event.preventDefault()
 
-    const data = new FormData(event.target)
-    await apiCall(data)
-}
+    const data = formatData(new FormData(event.target))
 
-function getButton(form) {
-    return form.querySelector('[type="submit"]')
-}
+    apiCall(data)
+        .then(async response => {
+            if (!response.ok) {
+                const body = await response.text()
+                console.error(body)
 
-function addHiddenField(form, key, value) {
-    const input = document.createElement('input')
+                return Promise.reject(`${response.statusText}`)
+            }
 
-    input.setAttribute('type', 'hidden')
-    input.setAttribute('name', key)
-    input.setAttribute('value', value)
-
-    form.appendChild(input)
-}
-
-function addHiddenFields(form) {
-    const additionalFields = config.hiddenInputs
-
-    for (let key in additionalFields) {
-        if (!additionalFields[key]) {
-            continue;
-        }
-
-        addHiddenField(form, key, additionalFields[key])
-    }
-}
-
-function setSubmitHandler(form) {
-    form.setAttribute('onsubmit', 'saveLead(event)')
-}
-
-function embed(form) {
-    addHiddenFields(form)
-    setSubmitHandler(form)
+            event.target.submit()
+        })
+        .catch(err => alert(err))
 }
 
 function inject() {
     Array.from(document.forms).forEach(
-        form => embed(form)
+        form => form.setAttribute('onsubmit', 'saveLead(event)')
     )
 }
 
