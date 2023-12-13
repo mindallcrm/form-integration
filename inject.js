@@ -14,7 +14,7 @@ let config = {
     hiddenInputs: {
         // Required
         orgId: '{uuid}',
-        sourceId: '{?}',
+        sourceId: '{page-title}',
 
         // Optional
         source: '',
@@ -59,7 +59,8 @@ window.saveLead = async (event) => {
                 const body = await response.text()
                 console.error(body)
 
-                return Promise.reject(`${response.statusText}`)
+                const errorMessage = response.statusText || 'Request failed'
+                return Promise.reject(errorMessage)
             }
 
             event.target.submit()
