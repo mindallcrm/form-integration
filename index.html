@@ -2,13 +2,27 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Some kind of Lead Generation Page #92837</title>
     <script src="inject.js"></script>
+    <script>
+        window.MINDALL_CRM.init({
+            url: 'http://127.0.0.1:8000/api/lead/create/byExternalForm',
+            inputs: {
+                firstname: 'wpforms[fields][0][first]',
+                lastname: 'wpforms[fields][0][last]',
+                phone: 'wpforms[fields][3]',
+                email: 'wpforms[fields][1]',
+                notes: 'wpforms[fields][2]',
+            },
+            hiddenInputs: {
+                orgId: 'a71de314-8041-4c86-a7b4-9ad22c37fe9b',
+            },
+        })
+    </script>
 </head>
 <body>
 <form id="wpforms-form-233" class="wpforms-validate wpforms-form wpforms-ajax-form" data-formid="233" method="post"
       enctype="multipart/form-data" action="/" data-token="21cfd4bb1dbc62cdc3566b59c57c4723" novalidate="novalidate">
-    <noscript class="wpforms-error-noscript">Please enable JavaScript in your browser to complete this form.</noscript>
     <div class="wpforms-hidden" id="wpforms-error-noscript">Please enable JavaScript in your browser to complete this
         form.
     </div>
@@ -58,8 +72,6 @@
         <button type="submit" name="wpforms[submit]" id="wpforms-submit-233" class="wpforms-submit"
                 data-alt-text="Sending..." data-submit-text="Submit" aria-live="assertive" value="wpforms-submit">Submit
         </button>
-        <img decoding="async" src="https://offplansale.ae/wp-content/plugins/wpforms-lite/assets/images/submit-spin.svg"
-             class="wpforms-submit-spinner" style="display: none;" width="26" height="26" alt="Loading"></div>
 </form>
 </body>
 </html>
