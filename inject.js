@@ -3,6 +3,7 @@
 let config = {
     url: 'https://crm.mindall.co/api/api/lead/create/byExternalForm',
     submitDefaultForm: false,
+    formId: '',
 
     inputs: {
         firstname: '',
@@ -65,21 +66,40 @@ window.saveLead = async (event) => {
         .catch(err => alert(err))
 }
 
-function inject() {
+function updateForms() {
     if (document.forms.length === 0) {
         console.error('[Mindall CRM] Plugin has not found any forms')
-        return
+        return false
     }
 
+    if (!config.formId) {
+        Array.from(document.forms).forEach(
+            form => form.setAttribute('onsubmit', 'saveLead(event)')
+        )
+        return true
+    }
+
+    const form = document.getElementById(config.formId)
+
+    if (!form) {
+        console.error(`[Mindall CRM] Form with ID '${config.formId}' not found`)
+        return false
+    }
+
+    form.setAttribute('onsubmit', 'saveLead(event)')
+    return true
+}
+
+function inject() {
     if (!config.hiddenInputs?.sourceId) {
         setDefaultSourceId()
     }
 
-    Array.from(document.forms).forEach(
-        form => form.setAttribute('onsubmit', 'saveLead(event)')
-    )
-
-    console.info('[Mindall CRM] Successfully installed')
+    if (updateForms()) {
+        console.info('[Mindall CRM] Successfully installed')
+    } else {
+        console.error('[Mindall CRM] Installation failed')
+    }
 }
 
 function updateConfig(defaultValue, newValue) {
@@ -101,7 +121,7 @@ function updateConfig(defaultValue, newValue) {
 }
 
 function setDefaultSourceId() {
-    console.info(`[Mindall CRM] Setting Source ID from title: ${document.title}`)
+    console.info(`[Mindall CRM] Setting Source ID from title: '${document.title}'`)
     config.hiddenInputs.sourceId = document.title
 }
 

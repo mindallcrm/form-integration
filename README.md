@@ -38,7 +38,11 @@
         // Default: 'https://crm.mindall.co/api/api/lead/create/byExternalForm'
         url: 'https://example.com/send-the-request-here',
 
-        // Whether to resubmit a form or not.
+        // Set Form ID to update only certain form, but not all of them.
+        // Default: all forms on the page
+        formId: 'wpforms-form-233',
+
+        // Whether to resubmit a form after sending request or not.
         // Default: false
         submitDefaultForm: true,
 
