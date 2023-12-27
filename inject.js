@@ -2,7 +2,7 @@
 
 let config = {
     url: 'https://crm.mindall.co/api/api/lead/create/byExternalForm',
-    submitDefaultForm: false,
+    prevent: true,
     formId: '',
 
     inputs: {
@@ -13,7 +13,7 @@ let config = {
         notes: '',
     },
 
-    hiddenInputs: {
+    meta: {
         orgId: '',
         sourceId: '',
         source: '',
@@ -29,8 +29,8 @@ function formatData(formData) {
         data[inputKey] = formData.get(config.inputs[inputKey])
     }
 
-    for (let inputKey in config.hiddenInputs) {
-        data[inputKey] = config.hiddenInputs[inputKey]
+    for (let inputKey in config.meta) {
+        data[inputKey] = config.meta[inputKey]
     }
 
     return data
@@ -59,7 +59,7 @@ window.saveLead = async (event) => {
                 return Promise.reject(errorMessage)
             }
 
-            if (config.submitDefaultForm) {
+            if (!config.prevent) {
                 event.target.submit()
             }
         })
@@ -91,7 +91,7 @@ function updateForms() {
 }
 
 function inject() {
-    if (!config.hiddenInputs?.sourceId) {
+    if (!config.meta?.sourceId) {
         setDefaultSourceId()
     }
 
@@ -122,17 +122,18 @@ function updateConfig(defaultValue, newValue) {
 
 function setDefaultSourceId() {
     console.info(`[Mindall CRM] Setting Source ID from title: '${document.title}'`)
-    config.hiddenInputs.sourceId = document.title
+    config.meta.sourceId = document.title
 }
 
 window.MINDALL_CRM = {
-    init(userConfig) {
-        if (!userConfig || !userConfig.hiddenInputs?.orgId) {
+    init(organizationId, userConfig) {
+        if (!organizationId || !userConfig || !userConfig.inputs) {
             console.error('[Mindall CRM] Plugin is not injected due to missing configuration')
             return
         }
 
         config = updateConfig({...config}, userConfig)
+        config.meta.orgId = organizationId
 
         window.onload = inject
     }

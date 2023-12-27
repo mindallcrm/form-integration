@@ -1,12 +1,12 @@
+<!-- File for testing script -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Some kind of Lead Generation Page #92837</title>
-    <!-- File for testing script -->
     <script src="dist/inject.js"></script>
     <script>
-        window.MINDALL_CRM.init({
+        window.MINDALL_CRM.init('a71de314-8041-4c86-a7b4-9ad22c37fe9b', {
             url: 'http://127.0.0.1:8000/api/lead/create/byExternalForm',
             inputs: {
                 firstname: 'wpforms[fields][0][first]',
@@ -14,9 +14,6 @@
                 phone: 'wpforms[fields][3]',
                 email: 'wpforms[fields][1]',
                 notes: 'wpforms[fields][2]',
-            },
-            hiddenInputs: {
-                orgId: 'a71de314-8041-4c86-a7b4-9ad22c37fe9b',
             },
         })
     </script>
