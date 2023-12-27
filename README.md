@@ -1,15 +1,22 @@
 # Change the form manually
 
-1. Set the `target`
-2. TODO
+### TODO
 
 # Inject the script
+
+## Build & Deploy
+
+1. `pnpm i`
+2. `pnpm build`
+3. Find generated bundle inside `dist/` and put it on CDN
+
+## Inject & Configure
 
 ### Minimum configuration
 
 ```html
 
-<script src="https://example.com/mindall-crm-plugin.js"></script>
+<script src="https://cdn-example.com/mindall-crm-plugin.js"></script>
 <script>
     window.MINDALL_CRM.init({
         inputs: {
@@ -29,9 +36,10 @@
 ```
 
 ### Available configuration
+
 ```html
 
-<script src="https://example.com/mindall-crm-plugin.js"></script>
+<script src="https://cdn-example.com/mindall-crm-plugin.js"></script>
 <script>
     window.MINDALL_CRM.init({
         // Url to send a request to.

@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "esbuild": "^0.19.10"
+  },
+  "scripts": {
+    "build": "npx esbuild inject.js --minify --target=es2016,chrome58,edge16,firefox57,node12,safari11 --outdir=dist"
+  }
+}
