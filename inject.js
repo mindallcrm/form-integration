@@ -18,6 +18,7 @@ const MINDALL_CRM = {
             source: '',
         },
     },
+
     init(organizationId, userConfig) {
         if (!organizationId || !userConfig || !userConfig.inputs) {
             console.error('[Mindall CRM] Plugin is not injected due to missing configuration')
@@ -29,6 +30,7 @@ const MINDALL_CRM = {
 
         window.onload = () => this.inject()
     },
+
     updateConfig(defaultValue, newValue) {
         for (const newKey in defaultValue) {
             const field = newValue[newKey] ?? undefined
@@ -46,21 +48,20 @@ const MINDALL_CRM = {
 
         return defaultValue
     },
+
     inject() {
         if (!this.config.meta?.sourceId) {
             this.setDefaultSourceId()
         }
 
-        if (this.updateForms()) {
-            console.info('[Mindall CRM] Successfully installed')
-        } else {
-            console.error('[Mindall CRM] Installation failed')
-        }
+        console.info('[Mindall CRM] Successfully installed')
     },
+
     setDefaultSourceId() {
         console.info(`[Mindall CRM] Setting Source ID from title: '${document.title}'`)
         this.config.meta.sourceId = document.title
     },
+
     formatData(formData) {
         const data = {}
 
@@ -74,29 +75,7 @@ const MINDALL_CRM = {
 
         return data
     },
-    updateForms() {
-        if (document.forms.length === 0) {
-            console.error('[Mindall CRM] Plugin has not found any forms')
-            return false
-        }
 
-        if (!this.config.formId) {
-            Array.from(document.forms).forEach(
-                form => form.setAttribute('onsubmit', 'saveLead(event)')
-            )
-            return true
-        }
-
-        const form = document.getElementById(this.config.formId)
-
-        if (!form) {
-            console.error(`[Mindall CRM] Form with ID '${this.config.formId}' not found`)
-            return false
-        }
-
-        form.setAttribute('onsubmit', 'saveLead(event)')
-        return true
-    },
     async apiCall(data) {
         return fetch(this.config.url, {
             method: 'POST',
@@ -106,26 +85,38 @@ const MINDALL_CRM = {
             },
             body: JSON.stringify(data)
         })
+    },
+
+    async handleFormSubmit(event) {
+        event.preventDefault()
+
+        const data = MINDALL_CRM.formatData(new FormData(event.target))
+
+        MINDALL_CRM.apiCall(data)
+            .then(async response => {
+                if (!response.ok) {
+                    const errorMessage = response.statusText || 'Request failed'
+                    return Promise.reject(errorMessage)
+                }
+
+                if (!MINDALL_CRM.config.prevent) {
+                    event.target.submit()
+                }
+            })
+            .catch(err => alert(err))
     }
 }
 
-window.saveLead = async (event) => {
-    event.preventDefault()
+document.addEventListener('submit', (event) => {
+    if (event.target.tagName.toLowerCase() !== 'form') {
+        return
+    }
 
-    const data = MINDALL_CRM.formatData(new FormData(event.target))
+    if (MINDALL_CRM.config.formId && MINDALL_CRM.config.formId !== event.target.id) {
+        return
+    }
 
-    MINDALL_CRM.apiCall(data)
-        .then(async response => {
-            if (!response.ok) {
-                const errorMessage = response.statusText || 'Request failed'
-                return Promise.reject(errorMessage)
-            }
-
-            if (!MINDALL_CRM.config.prevent) {
-                event.target.submit()
-            }
-        })
-        .catch(err => alert(err))
-}
+    MINDALL_CRM.handleFormSubmit(event)
+}, true)
 
 window.MINDALL_CRM = MINDALL_CRM
