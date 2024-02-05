@@ -15,7 +15,6 @@
 ### Minimum configuration
 
 ```html
-
 <script src="https://cdn-example.com/mindall-crm-plugin.js"></script>
 <script>
     window.MINDALL_CRM.init(
@@ -24,8 +23,7 @@
         {
             inputs: {
                 // Names of fields in the form. (Required)
-                firstname: 'wpforms[fields][0][first]',
-                lastname: 'wpforms[fields][0][last]',
+                fullName: '<fullName field>'
                 phone: 'wpforms[fields][3]',
                 email: 'wpforms[fields][1]',
                 notes: 'wpforms[fields][2]',
@@ -57,6 +55,7 @@
             prevent: false,
 
             inputs: {
+                // You need to specify either fullName (as in the first example) or firstname & lastname
                 firstname: 'wpforms[fields][0][first]',
                 lastname: 'wpforms[fields][0][last]',
                 phone: 'wpforms[fields][3]',
