@@ -68,6 +68,9 @@ const MINDALL_CRM = {
 
         for (let inputKey in this.config.inputs) {
             data[inputKey] = formData.get(this.config.inputs[inputKey])
+            if (data[inputKey] === null) {
+                delete data[inputKey]
+            }
         }
 
         for (let inputKey in this.config.meta) {
