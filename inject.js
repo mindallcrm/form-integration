@@ -7,9 +7,9 @@ const MINDALL_CRM = {
         inputs: {
             firstname: '',
             lastname: '',
-            fullName: '',
             email: '',
             phone: '',
+            propertyReference: '',
             notes: '',
         },
 

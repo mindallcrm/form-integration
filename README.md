@@ -23,10 +23,10 @@
         {
             inputs: {
                 // Names of fields in the form. (Required)
-                fullName: '<fullName field>'
-                phone: 'wpforms[fields][3]',
-                email: 'wpforms[fields][1]',
-                notes: 'wpforms[fields][2]',
+                firstname: 'input_1'
+                lastname: 'input_2',
+                phone: 'input_4',
+                email: 'input_3',
             },
         },
     )
@@ -60,6 +60,7 @@
                 lastname: 'wpforms[fields][0][last]',
                 phone: 'wpforms[fields][3]',
                 email: 'wpforms[fields][1]',
+                propertyReference: 'wpforms[fields][123]',
                 notes: 'wpforms[fields][2]',
             },
 

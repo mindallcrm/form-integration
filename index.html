@@ -4,16 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <title>Some kind of Lead Generation Page #92837</title>
-    <script src="dist/inject.js"></script>
+    <script src="./inject.js"></script>
     <script>
         window.MINDALL_CRM.init('a71de314-8041-4c86-a7b4-9ad22c37fe9b', {
             url: 'http://127.0.0.1:8000/api/lead/create/byExternalForm',
             inputs: {
-                firstname: 'wpforms[fields][0][first]',
-                lastname: 'wpforms[fields][0][last]',
+                firstname: 'firstname',
+                lastname: 'lastname',
                 phone: 'wpforms[fields][3]',
                 email: 'wpforms[fields][1]',
                 notes: 'wpforms[fields][2]',
+                propertyReference: 'prop-ref',
             },
         })
     </script>
@@ -30,20 +31,10 @@
                 <legend class="wpforms-field-label">Name <span class="wpforms-required-label"
                                                                aria-hidden="true">*</span></legend>
                 <div class="wpforms-field-row wpforms-field-large">
-                    <div class="wpforms-field-row-block wpforms-first wpforms-one-half"><input type="text"
-                                                                                               id="wpforms-233-field_0"
-                                                                                               class="wpforms-field-name-first wpforms-field-required"
-                                                                                               name="wpforms[fields][0][first]"
-                                                                                               aria-errormessage="wpforms-233-field_0-error"
-                                                                                               required=""><label
-                            for="wpforms-233-field_0" class="wpforms-field-sublabel after ">First</label></div>
-                    <div class="wpforms-field-row-block wpforms-one-half"><input type="text"
-                                                                                 id="wpforms-233-field_0-last"
-                                                                                 class="wpforms-field-name-last wpforms-field-required"
-                                                                                 name="wpforms[fields][0][last]"
-                                                                                 aria-errormessage="wpforms-233-field_0-last-error"
-                                                                                 required=""><label
-                            for="wpforms-233-field_0-last" class="wpforms-field-sublabel after ">Last</label></div>
+                    <label>First Name*</label>
+                    <input type="text" name="firstname">
+                    <label>Last Name*</label>
+                    <input type="text" name="lastname">
                 </div>
             </fieldset>
         </div>
@@ -62,6 +53,10 @@
                 class="wpforms-field-label" for="wpforms-233-field_2">Comment or Message</label><textarea
                 id="wpforms-233-field_2" class="wpforms-field-medium" name="wpforms[fields][2]"
                 aria-errormessage="wpforms-233-field_2-error"></textarea></div>
+        <div>
+            <label>Property Reference</label>
+            <input type="text" name="prop-ref">
+        </div>
     </div><!-- .wpforms-field-container -->
     <div class="wpforms-submit-container"><input type="hidden" name="wpforms[id]" value="233"> <input type="hidden"
                                                                                                       name="wpforms[nonce]"
