@@ -17,7 +17,7 @@ You can find configuration examples below.
         {
             inputs: {
                 // Names of fields in the form. (Required)
-                firstname: 'input_1'
+                firstname: 'input_1',
                 lastname: 'input_2',
                 phone: 'input_4',
                 email: 'input_3',
