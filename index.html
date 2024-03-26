@@ -9,12 +9,12 @@
         window.MINDALL_CRM.init('a71de314-8041-4c86-a7b4-9ad22c37fe9b', {
             url: 'http://127.0.0.1:8000/api/lead/create/byExternalForm',
             inputs: {
-                firstname: 'firstname',
-                lastname: 'lastname',
-                phone: 'wpforms[fields][3]',
-                email: 'wpforms[fields][1]',
-                notes: 'wpforms[fields][2]',
-                propertyReference: 'prop-ref',
+                firstname: { name: 'firstname' },
+                lastname: { name: 'lastname' },
+                phone: { name: 'wpforms[fields][3]' },
+                email: { name: 'wpforms[fields][1]' },
+                notes: { name: 'wpforms[fields][2]' },
+                propertyReference: { name: 'prop-ref' },
             },
         })
     </script>

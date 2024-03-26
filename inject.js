@@ -5,12 +5,12 @@ const MINDALL_CRM = {
         formId: '',
 
         inputs: {
-            firstname: '',
-            lastname: '',
-            email: '',
-            phone: '',
-            propertyReference: '',
-            notes: '',
+            firstname: {},
+            lastname: {},
+            email: {},
+            phone: {},
+            propertyReference: {},
+            notes: {},
         },
 
         meta: {
@@ -33,14 +33,10 @@ const MINDALL_CRM = {
     },
 
     updateConfig(defaultValue, newValue) {
-        for (const newKey in defaultValue) {
-            const field = newValue[newKey] ?? undefined
+        for (const newKey in newValue) {
+            const field = newValue[newKey]
 
-            if (field === undefined) {
-                continue
-            }
-
-            if (typeof field === 'object' && !Array.isArray(field) && field !== null) {
+            if (typeof field === 'object' && !Array.isArray(field) && field !== null && !(field instanceof RegExp)) {
                 defaultValue[newKey] = this.updateConfig(defaultValue[newKey], field)
             } else {
                 defaultValue[newKey] = field
@@ -63,23 +59,6 @@ const MINDALL_CRM = {
         this.config.meta.sourceId = document.title
     },
 
-    formatData(formData) {
-        const data = {}
-
-        for (let inputKey in this.config.inputs) {
-            data[inputKey] = formData.get(this.config.inputs[inputKey])
-            if (data[inputKey] === null) {
-                delete data[inputKey]
-            }
-        }
-
-        for (let inputKey in this.config.meta) {
-            data[inputKey] = this.config.meta[inputKey]
-        }
-
-        return data
-    },
-
     async apiCall(data) {
         return fetch(this.config.url, {
             method: 'POST',
@@ -91,10 +70,60 @@ const MINDALL_CRM = {
         })
     },
 
+    buildUserData(formHtml) {
+        const elements = ['input', 'select', 'textarea'].reduce(
+            (acc, selector) => acc.push(...formHtml.querySelectorAll(selector)) && acc,
+            []
+        )
+
+        const data = {}
+
+        for (let inputKey in this.config.inputs) {
+            const fieldSearchRule = this.config.inputs[inputKey]
+
+            let elementsWithValue = []
+            if (typeof fieldSearchRule === 'function') {
+                data[inputKey] = fieldSearchRule(formHtml)
+                continue
+            } else if (fieldSearchRule.id) {
+                if (fieldSearchRule.id instanceof RegExp) {
+                    elementsWithValue = elements.filter(el => fieldSearchRule.id.test(el.id))
+                } else {
+                    elementsWithValue = elements.filter(el => el.id === fieldSearchRule.id)
+                }
+            } else if (fieldSearchRule.name) {
+                if (fieldSearchRule.name instanceof RegExp) {
+                    elementsWithValue = elements.filter(el => fieldSearchRule.name.test(el.name))
+                } else {
+                    elementsWithValue = elements.filter(el => el.name === fieldSearchRule.name)
+                }
+            }
+
+            if (elementsWithValue.length) {
+                data[inputKey] = elementsWithValue[0].value || null
+            }
+        }
+
+        for (let key in data) {
+            if (data[key] === null) {
+                delete data[key]
+            }
+        }
+
+        return data
+    },
+
+    buildMetaData() {
+        return this.config.meta
+    },
+
     async handleFormSubmit(event) {
         event.preventDefault()
 
-        const data = MINDALL_CRM.formatData(new FormData(event.target))
+        const data = {
+            ...this.buildUserData(event.target),
+            ...this.buildMetaData(),
+        }
 
         MINDALL_CRM.apiCall(data)
             .then(async response => {

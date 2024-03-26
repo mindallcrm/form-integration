@@ -3,7 +3,7 @@
 ## Inject & Configure
 
 To create leads in CRM insert the script and configure it.
-Required fields are organization ID and names of the form fields.
+Required fields are organization ID and inputs descriptions.
 You can find configuration examples below.
 
 ### Minimum configuration
@@ -15,12 +15,16 @@ You can find configuration examples below.
         // Organization ID in Mindall CRM. (Required)
         'dd6175f2-ad36-46a8-bfa6-31d0b2f49cff',
         {
+            // Config to discover needed fields within the form. (Required)
+            // It is possible to specify field's name or id using either RegExp or exact string match.
+            // Also, it's possible to pass a callback to build a value manually.
             inputs: {
-                // Names of fields in the form. (Required)
-                firstname: 'input_1',
-                lastname: 'input_2',
-                phone: 'input_4',
-                email: 'input_3',
+                firstname: { name: 'firstname-field-name' },
+                lastname: { name: /^lastname-.*/ },
+                phone: (formHtml) => {
+                    return formHtml.querySelector('input').value.replaceAll(/\D/g, '')
+                },
+                email: { id: 'email-field-id' },
             },
         },
     )
@@ -49,13 +53,12 @@ You can find configuration examples below.
             prevent: false,
 
             inputs: {
-                // You need to specify either fullName (as in the first example) or firstname & lastname
-                firstname: 'wpforms[fields][0][first]',
-                lastname: 'wpforms[fields][0][last]',
-                phone: 'wpforms[fields][3]',
-                email: 'wpforms[fields][1]',
-                propertyReference: 'wpforms[fields][123]',
-                notes: 'wpforms[fields][2]',
+                firstname: { name : 'wpforms[fields][0][first]' },
+                lastname: { name: 'wpforms[fields][0][last]' },
+                phone: { name: 'wpforms[fields][3]' },
+                email: { name: 'wpforms[fields][1]' },
+                propertyReference: { name: 'wpforms[fields][4]' },
+                notes: { name: 'wpforms[fields][2]' },
             },
 
             meta: {
