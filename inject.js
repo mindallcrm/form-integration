@@ -1,7 +1,6 @@
 const MINDALL_CRM = {
     config: {
         url: 'https://crm.mindall.co/api/api/lead/create/byExternalForm',
-        prevent: true,
         formId: '',
 
         inputs: {
@@ -132,9 +131,7 @@ const MINDALL_CRM = {
                     return Promise.reject(errorMessage)
                 }
 
-                if (!MINDALL_CRM.config.prevent) {
-                    event.target.submit()
-                }
+                event.target.submit()
             })
             .catch(err => alert(err))
     }
